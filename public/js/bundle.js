@@ -36384,8 +36384,16 @@ var Planet = /** @class */ (function () {
         this.init = function () {
             _this.scene = new THREE.Scene();
             _this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
+            _this.scene.add(_this.camera);
+            // Moteur de rendu
+            _this.renderer = new THREE.WebGLRenderer({ antialias: true });
+            _this.renderer.setSize(window.innerWidth, window.innerHeight);
+            document.body.appendChild(_this.renderer.domElement);
+            // On rend notre scene disponible
+            _this.renderer.render(_this.scene, _this.camera);
         };
         console.log("Planetes en creation..");
+        this.init();
     }
     return Planet;
 }());
