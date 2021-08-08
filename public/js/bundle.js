@@ -36385,24 +36385,29 @@ var Planet = /** @class */ (function () {
             _this.scene = new THREE.Scene();
             _this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
             _this.scene.add(_this.camera);
+            _this.camera.position.z = 5;
+            // On choisi notre forme à rendre
+            _this.geometry = new THREE.SphereGeometry();
+            _this.material = new THREE.MeshLambertMaterial({ color: 0xDC0D0D });
+            _this.mesh = new THREE.Mesh(_this.geometry, _this.material);
+            _this.scene.add(_this.mesh);
+            // On ajoute un point de lumiere
+            _this.light = new THREE.PointLight();
+            _this.light.position.set(30, 30, 30);
+            _this.scene.add(_this.light);
             // Moteur de rendu
             _this.renderer = new THREE.WebGLRenderer({ antialias: true });
             _this.renderer.setSize(window.innerWidth, window.innerHeight);
             document.body.appendChild(_this.renderer.domElement);
             // On rend notre scene disponible
             _this.renderer.render(_this.scene, _this.camera);
-            // On choisi notre forme à rendre
-            _this.geometry = new THREE.SphereGeometry();
-            _this.material = new THREE.MeshDepthMaterial();
-            _this.mesh = new THREE.Mesh(_this.geometry, _this.material);
-            _this.scene.add(_this.mesh);
-            _this.camera.position.z = 4;
             _this.animate();
         };
         this.animate = function () {
             requestAnimationFrame(_this.animate);
-            _this.mesh.rotation.x += 0.01;
-            _this.mesh.rotation.y += 0.01;
+            _this.camera.rotation.x = 25;
+            _this.camera.rotation.z = 25;
+            _this.camera.lookAt(_this.mesh.position);
             _this.renderer.render(_this.scene, _this.camera);
         };
         console.log("Planetes en creation..");

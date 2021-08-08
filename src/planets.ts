@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { ThisExpression } from "typescript";
 
 class Planet {
         scene;
@@ -7,6 +8,9 @@ class Planet {
         geometry;
         material;
         mesh;
+        light;
+
+        speed:number
 
     constructor(){
         console.log("Planetes en creation..")
@@ -16,37 +20,44 @@ class Planet {
     init = ()=> {
         this.scene = new THREE.Scene();
         this.camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 1000 )
-
-                this.scene.add(this.camera)
+        this.scene.add(this.camera)
         
-        // Moteur de rendu
-        this.renderer = new THREE.WebGLRenderer({antialias:true});
-        this.renderer.setSize( window.innerWidth, window.innerHeight );
-
-        document.body.appendChild( this.renderer.domElement )
-
-        // On rend notre scene disponible
-        this.renderer.render(this.scene, this.camera);
+        this.camera.position.z = 5;
 
         // On choisi notre forme à rendre
         this.geometry = new THREE.SphereGeometry();
-        this.material = new THREE.MeshDepthMaterial();
+        this.material = new THREE.MeshLambertMaterial( { color: 0xDC0D0D  } );
         this.mesh = new THREE.Mesh( this.geometry, this.material );
             this.scene.add( this.mesh );
 
-            this.camera.position.z = 4;
+        // On ajoute un point de lumiere
+        this.light = new THREE.PointLight();
+        this.light.position.set( 30, 30, 30 );
+        this.scene.add( this.light );
+
+        // Moteur de rendu
+        this.renderer = new THREE.WebGLRenderer({antialias:true});
+        this.renderer.setSize( window.innerWidth, window.innerHeight );
+  
+        document.body.appendChild( this.renderer.domElement )
+        // On rend notre scene disponible
+        this.renderer.render(this.scene, this.camera);
 
             this.animate()
     }
 
+
     animate = () =>{
-        // Animation du rendu
         requestAnimationFrame( this.animate );
-
-        this.mesh.rotation.x += 0.01;
-        this.mesh.rotation.y += 0.01;
-
+   
+        this.camera.rotation.x = 25;
+        this.camera.rotation.z = 25;
+        
+        
+        this.camera.lookAt(this.mesh.position);
+        
         this.renderer.render( this.scene, this.camera );
+
     }
 }
 
