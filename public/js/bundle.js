@@ -36391,6 +36391,19 @@ var Planet = /** @class */ (function () {
             document.body.appendChild(_this.renderer.domElement);
             // On rend notre scene disponible
             _this.renderer.render(_this.scene, _this.camera);
+            // On choisi notre forme à rendre
+            _this.geometry = new THREE.SphereGeometry();
+            _this.material = new THREE.MeshDepthMaterial();
+            _this.mesh = new THREE.Mesh(_this.geometry, _this.material);
+            _this.scene.add(_this.mesh);
+            _this.camera.position.z = 4;
+            _this.animate();
+        };
+        this.animate = function () {
+            requestAnimationFrame(_this.animate);
+            _this.mesh.rotation.x += 0.01;
+            _this.mesh.rotation.y += 0.01;
+            _this.renderer.render(_this.scene, _this.camera);
         };
         console.log("Planetes en creation..");
         this.init();
