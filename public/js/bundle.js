@@ -36384,31 +36384,37 @@ var Planet = /** @class */ (function () {
         this.init = function () {
             _this.scene = new THREE.Scene();
             _this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
-            _this.scene.add(_this.camera);
             _this.camera.position.z = 5;
-            // On choisi notre forme à rendre
-            _this.geometry = new THREE.SphereGeometry();
-            _this.material = new THREE.MeshLambertMaterial({ color: 0xDC0D0D });
-            _this.mesh = new THREE.Mesh(_this.geometry, _this.material);
-            _this.scene.add(_this.mesh);
-            // On ajoute un point de lumiere
-            _this.light = new THREE.PointLight();
-            _this.light.position.set(30, 30, 30);
-            _this.scene.add(_this.light);
+            _this.scene.add(_this.camera);
             // Moteur de rendu
             _this.renderer = new THREE.WebGLRenderer({ antialias: true });
             _this.renderer.setSize(window.innerWidth, window.innerHeight);
+            _this.renderer.setPixelRatio(window.devicePixelRatio);
+            // const texture = new THREE.TextureLoader().load( 'images/earthmap1k.jpg' );
+            // On choisi notre forme à rendre
+            _this.geometry = new THREE.SphereGeometry(0.6, 32, 32);
+            _this.material = new THREE.MeshPhongMaterial({
+                roughness: 1,
+                metalness: 0,
+                // map: texture
+            });
+            _this.mesh = new THREE.Mesh(_this.geometry, _this.material);
+            _this.scene.add(_this.mesh);
+            // On ajoute de la lumiere
+            _this.ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
+            _this.scene.add(_this.ambientLight);
+            _this.pointLight = new THREE.PointLight(0xffffff, 1);
+            _this.pointLight.position.set(30, -30, 30);
+            _this.scene.add(_this.pointLight);
             document.body.appendChild(_this.renderer.domElement);
-            // On rend notre scene disponible
-            _this.renderer.render(_this.scene, _this.camera);
             _this.animate();
+            _this.renderer.render(_this.scene, _this.camera);
         };
         this.animate = function () {
-            requestAnimationFrame(_this.animate);
-            _this.camera.rotation.x = 25;
-            _this.camera.rotation.z = 25;
-            _this.camera.lookAt(_this.mesh.position);
+            _this.mesh.rotation.x -= 0.010;
+            _this.mesh.rotation.z -= 0.010;
             _this.renderer.render(_this.scene, _this.camera);
+            requestAnimationFrame(_this.animate);
         };
         console.log("Planetes en creation..");
         this.init();
